@@ -5,9 +5,13 @@ const app = express();
 
 app.get('/cartelera', async (req, res) => {
   try {
-    const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
-    const page = await browser.newPage();
+    const browser = await puppeteer.launch({
+      headless: 'new',
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
 
+    const page = await browser.newPage();
     await page.goto('https://www.cinepolis.com.ar/peliculas', { waitUntil: 'networkidle2' });
     await page.waitForSelector('.billboard-movie');
 
